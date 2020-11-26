@@ -17,7 +17,7 @@ if __name__ != "__main__":
 
     def handle_request(durations: int, concurent: int):
         with Pool(concurent) as p:
-            p.map(f, range(0, iterations))
+            p.map(handle_one_cpu, range(0, iterations))
 
 
     app = Flask(__name__)
