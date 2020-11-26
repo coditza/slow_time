@@ -15,9 +15,9 @@ if __name__ != "__main__":
                 break
             foo = duration * duration
 
-    def handle_request(durations: int, concurent: int):
-        with Pool(concurent) as p:
-            p.map(handle_one_cpu, range(0, concurent))
+    def handle_request(durations: int, cpus: int):
+        with Pool(cpus) as p:
+            p.map(handle_one_cpu, range(0, cpus))
 
 
     app = Flask(__name__)
@@ -26,14 +26,14 @@ if __name__ != "__main__":
     @app.route('/slow_time')
     def hello_world():
         ts = time.time()
-        iterations = int(os.environ.get('SLOW_TIME_ITERATIONS', 1))
-        concurent = int(os.environ.get('SLOW_TIME_CONCURENT', 2))
-        print(f"Handling request, iterations={iterations}, concurent={concurent}")
-        handle_request(iterations, concurent)
+        duration = int(os.environ.get('SLOW_TIME_DURATION', 1))
+        cpus = int(os.environ.get('SLOW_TIME_CPU', 2))
+        print(f"Handling request, duration={duration}, cpus={cpus}")
+        handle_request(duration, cpus)
         return {
             "gmt-time": datetime.datetime.now().isoformat(),
             "duration": time.time() - ts
         }
 
 else:
-    print("Usage: SLOW_TIME_ITERATIONS=<int> SLOW_TIME_CONCURENT=<int> gunicorn -w <workers> -b 0.0.0.0:<port> slow_time:app")
+    print("Usage: SLOW_TIME_DURATION=<int> SLOW_TIME_CPU=<int> gunicorn -w <workers> -b 0.0.0.0:<port> slow_time:app")
