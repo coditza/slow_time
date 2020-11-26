@@ -13,7 +13,7 @@ if __name__ != "__main__":
         while True:
             if time.time() - ts > duration:
                 break
-            x * x
+            foo = duration * duration
 
     def handle_request(durations: int, concurent: int):
         with Pool(concurent) as p:
