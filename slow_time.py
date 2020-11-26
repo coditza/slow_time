@@ -11,25 +11,22 @@ if __name__ != "__main__":
     def handle_one_cpu(duration: int) -> None:
         ts = time.time()
         while True:
-            if time.time() - ts > duration:
+            dur = time.time() - ts
+            if dur > duration:
                 break
             foo = duration * duration
 
-    def handle_request(durations: int, cpus: int):
-        with Pool(cpus) as p:
-            p.map(handle_one_cpu, range(0, cpus))
-
-
     app = Flask(__name__)
-
 
     @app.route('/slow_time')
     def hello_world():
         ts = time.time()
         duration = int(os.environ.get('SLOW_TIME_DURATION', 1))
         cpus = int(os.environ.get('SLOW_TIME_CPU', 2))
-        print(f"Handling request, duration={duration}, cpus={cpus}")
-        handle_request(duration, cpus)
+
+        with Pool(cpus) as p:
+            p.map(handle_one_cpu, [duration for _ in range(0, cpus)])
+
         return {
             "gmt-time": datetime.datetime.now().isoformat(),
             "duration": time.time() - ts
