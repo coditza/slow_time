@@ -8,11 +8,14 @@ from flask import Flask
 
 if __name__ != "__main__":
 
-    def f(x):
-        return x * x
+    def handle_one_cpu(duration: int) -> None:
+        ts = time.time()
+        while True:
+            if time.time() - ts > duration:
+                break
+            x * x
 
-
-    def handle_request(iterations: int, concurent: int):
+    def handle_request(durations: int, concurent: int):
         with Pool(concurent) as p:
             p.map(f, range(0, iterations))
 
